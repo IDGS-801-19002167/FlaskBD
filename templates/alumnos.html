@@ -1,0 +1,59 @@
+<!-- Extends layout -->
+{% extends "layout2.html" %}
+
+<!-- Content -->
+{% block content %}
+
+<!-- Macros -->
+{% import "_macros.html" as macros %}
+
+<!-- Form content -->
+<h1>Alumnos UTL</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            <form action="" method="POST" novalidate>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{ macros.camposNuevos(form.nombre, class="form-control") }}
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{ macros.camposNuevos(form.apaterno, class="form-control") }}
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{ macros.camposNuevos(form.amaterno, class="form-control") }}
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{ macros.camposNuevos(form.email, class="form-control") }}
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{ macros.camposNuevos(form.edad, class="form-control") }}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="btn1" name="btn1">
+                    Enviar
+                </button>
+            </form>
+
+            <br><br>
+            <h1>Nombre: {{nom}}</h1>
+            <h1>Apellido Paterno: {{apa}}</h1>
+            <h1>Apellido Materno: {{ama}}</h1>
+            <h1>Email: {{email}}</h1>
+            <h1>Edad: {{edad}}</h1>
+        </div>
+    </div>
+</div>
+
+<!-- END CONTENT -->
+{% endblock %}

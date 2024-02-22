@@ -1,0 +1,29 @@
+<!-- Macro attr -->
+{% macro datos (name, placeholder, type = "text", class="") %}
+
+<p>
+  <input type="{{ type }}" name="{{ name }}" placeholder="{{ placeholder }}" />
+</p>
+
+<!-- End Macro attr -->
+{% endmacro %}
+
+{% macro camposNuevos (field) %}
+
+<td>
+    {{ field.label }}
+</td>
+
+<dd>
+    {{ field(**kwargs) | safe }}
+</dd>
+
+{% if field.errors %}
+<ul style="list-style: none;">
+  {% for error in field.errors %}
+    <li style="color: red">{{ error }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% endmacro %}

@@ -1,5 +1,30 @@
 {% extends "layout2.html" %}
-
 {% block container %}
-<h1>Flask UTL</h1>
+{% from "_macros.html" import camposNuevos %}
+<div class="container-fluid">
+    <div class="row">
+        <form action="/index" method="POST" name="sent" id="contactForm" novalidate>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="row control-group">
+                <div class="form-group col-xs-12 floating-label-form-group controls">
+                    {{ camposNuevos(form.nombre, class="form-control") }}
+                </div>
+            </div>
+            <div class="row control-group">
+                <div class="form-group col-xs-12 floating-label-form-group controls">
+                    {{ camposNuevos(form.apaterno, class="form-control") }}
+                </div>
+            </div>
+            <div class="row control-group">
+                <div class="form-group col-xs-12 floating-label-form-group controls">
+                    {{ camposNuevos(form.email, class="form-control") }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="btn1" name="btn1">
+                Enviar
+            </button>
+        </form>
+    </div>
+</div>
 {% endblock %}

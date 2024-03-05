@@ -1,0 +1,41 @@
+{% extends "layout2.html" %} {% block content %} {% from "_macros.html" import
+camposNuevos %}
+<div class="container-fluid">
+  <div class="row">
+    <form action="/modificar" method="POST" name="sent" id="contactForm" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group controls">
+          {{ camposNuevos(form.nombre, class="form-control") }}
+        </div>
+      </div>
+      <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group controls">
+          {{ camposNuevos(form.apaterno, class="form-control") }}
+        </div>
+      </div>
+      <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group controls">
+          {{ camposNuevos(form.email, class="form-control") }}
+        </div>
+      </div>
+      <div class="row control-row">
+        <div class="form-group col-xs-12 floating-label-form-group controls">
+          {{camposNuevos(form.id, class="form-control")}}
+        </div>
+      </div>
+
+      <input
+        class="btn btn-danger"
+        type="submit"
+        id="modificar"
+        name="modificar"
+        value="Modificar"
+      />
+      <a href="ABC_Completo.html" class="btn btn-success">
+        <i class="icon-undo icon-white"></i>Cancelar
+      </a>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -34,3 +34,9 @@ class UserForm(Form):
         validators.length(min=4, max=10, message="Ingresa un Apellido valido")
     ])
     
+class UserForm2(Form):
+    id = IntegerField('id', [validators.number_range(min=1, max=20, message="Valor no valido")])
+    nombre=StringField("Nombre", [validators.DataRequired(message="El nombre es requerido"), validators.length(min=4,max=20, message="Ingresa un nombre de entre 4 a 20 letras")])
+    apaterno=StringField("Apellido Paterno", [validators.DataRequired(message="El campo es requerido"), validators.length(min=4,max=10, message="Ingresa un apellido de entre 4 y 10 letras")])
+    amaterno=StringField("Apellido Materno", [validators.DataRequired(message="El campo es requerido"), validators.length(min=4,max=10, message="Ingresa un apellido de entre 4 y 10 letras")])
+    email=EmailField("Email", [validators.DataRequired(message=("El campo es requerido")), validators.Email('Ingrese un correo valido') ])

@@ -1,0 +1,32 @@
+{% extends "layout3.html" %} {% block content %} {% from "_macros.html" import
+camposNuevos %}
+<div class="container-fluid">
+  <div class="row">
+    <form
+      action="/eliminarpizza"
+      method="POST"
+      name="sent"
+      id="contactForm"
+      novalidate
+    >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group controls">
+          {{ camposNuevos(form.nombre, class="form-control") }}
+        </div>
+      </div>
+
+      <input
+        class="btn btn-danger"
+        type="submit"
+        id="eliminar"
+        name="eliminar"
+        value="Eliminar"
+      />
+      <a href="pizzas.html" class="btn btn-success">
+        <i class="icon-undo icon-white"></i>Cancelar
+      </a>
+    </form>
+  </div>
+</div>
+{% endblock %}

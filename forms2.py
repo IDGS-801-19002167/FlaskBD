@@ -33,14 +33,14 @@ class Pizza(Form):
 
     ingredientes = StringField("ingredientes")
 
-    dia = IntegerField("dia", [
+    dia = StringField("dia", [
         validators.DataRequired(message="Dia de venta requerido"),
-        validators.NumberRange(min=2, max=2)
+        validators.length(min=5, max=10)
     ])
 
-    mes = IntegerField("mes", [
+    mes = StringField("mes", [
         validators.DataRequired(message="Mes de venta requerido"),
-        validators.NumberRange(min=2, max=2)
+        validators.length(min=5, max=10)
     ])
 
     anio = IntegerField("anio", [
@@ -80,14 +80,14 @@ class PizzaE(Form):
 
     ingredientes = StringField("ingredientes")
 
-    dia = IntegerField("dia", [
+    dia = StringField("dia", [
         validators.DataRequired(message="Dia de venta requerido"),
-        validators.NumberRange(min=2, max=2)
+        validators.length(min=5, max=10)
     ])
 
-    mes = IntegerField("mes", [
+    mes = StringField("mes", [
         validators.DataRequired(message="Mes de venta requerido"),
-        validators.NumberRange(min=2, max=2)
+        validators.length(min=5, max=10)
     ])
 
     anio = IntegerField("anio", [

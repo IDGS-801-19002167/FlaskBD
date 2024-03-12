@@ -54,14 +54,17 @@ import checks %}
             </div>
             <div class="row mb-2 align-items-center">
               <div class="col-4">
-                {{ camposNuevos(form.dia, class="form-control",
-                placeholder="Dia", maxlength="2", minlength="2",
-                onKeyPress="if(this.value.length==2) return false;") }}
+                {% for dia in ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] %}
+                    <option value="{{ dia }}" {% if dia == dia_seleccionado %}selected{% endif %}>{{ dia }}</option>
+                {% endfor %}
               </div>
               <div class="col-4">
-                {{ camposNuevos(form.mes, class="form-control",
-                placeholder="Mes", maxlength="2", minlength="2",
-                onKeyPress="if(this.value.length==2) return false;") }}
+                <select name="filtermonth" id="filtermonth" class="form-select">
+                  <option value="" selected disabled>Mes</option>
+                  {% for mes in ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"] %}
+                      <option value="{{ mes }}" {% if mes == mes_seleccionado %}selected{% endif %}>{{ mes }}</option>
+                  {% endfor %}
+                </select>
               </div>
               <div class="col-4">
                 {{ camposNuevos(form.anio, class="form-control",

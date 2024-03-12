@@ -1,32 +1,61 @@
 $(document).ready(function () {
-
+    var table_ventas = document.getElementById('resultadoTabla');
+    table_ventas.style.visibility = 'hidden';
 });
 
 $('#filtrarBtn').click(function () {
-    const filtroSeleccionado = $('#filtroSelect').val();
-    const valorFiltro = $('#filtroInput').val();
+    const filterday = $('#filterday_get').val();
+    const filtermonth = $("#filtermonth_get").val();
+    const filteranio = $('#filteranio_get').val();
+    var data = {
+        filterday: filterday,
+        filtermonth: filtermonth,
+        filteranio: filteranio
+    };
 
     $.ajax({
         type: "POST",
         url: "/filtrar",
-        data: {
-            filtro: filtroSeleccionado,
-            valor: valorFiltro,
-            csrf_token: "{{ csrf_token() }}",
+        headers: {
+            "X-CSRFToken": $("#csrf_token").val(),
+        },
+        data: data,
+        beforeSend: function () {
+            Swal.fire({
+                title: "Consultando información",
+                html: "Por favor espere...",
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    Swal.showLoading();
+                },
+            });
         },
         success: function (response) {
+            console.log(response.resultados)
+            Swal.close();
             $('#resultadoTabla tbody').empty();
+            var table_ventas = document.getElementById('resultadoTabla');
+            table_ventas.style.visibility = 'visible';
+            let suma = 0;
 
             response.resultados.forEach(function (resultado) {
+                suma += resultado.pagoTotal;
+
                 $('#resultadoTabla tbody').append(
                     '<tr>' +
-                    '<td>' + resultado.dia + '</td>' +
-                    '<td>' + resultado.mes + '</td>' +
-                    '<td>' + resultado.anio + '</td>' +
                     '<td>' + resultado.nombreC + '</td>' +
+                    '<td>$ ' + resultado.pagoTotal + '.00 MXN</td>' +
                     '</tr>'
                 );
             });
+
+            $("#resultadoTabla tfoot").append(
+                '<tr>' +
+                '<td>Total de venta</td>' +
+                '<td>$ ' + suma + '.00 MXN</td>' +
+                '</tr>'
+            );
         },
         error: function (error) {
             console.error("Error en la solicitud:", error);
@@ -93,8 +122,7 @@ $("#btnVenta").on("click", function () {
                         showConfirmButton: false,
                         timer: 1500,
                     }).then(() => {
-                        console.log(response.message);
-                        // location.reload();
+                        location.reload();
                     });
                 },
                 error: function (error) {
@@ -104,3 +132,4 @@ $("#btnVenta").on("click", function () {
         }
     });
 });
+

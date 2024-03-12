@@ -22,8 +22,8 @@ class Pizza(db.Model):
     tamanio = db.Column(db.String(100))
     precio = db.Column(db.Float())
     ingredientes = db.Column(db.String(100), nullable = False)
-    dia = db.Column(db.Integer)
-    mes = db.Column(db.Integer)
+    dia = db.Column(db.String(10))
+    mes = db.Column(db.String(10))
     anio = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
@@ -32,8 +32,7 @@ class Ventas(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombreC = db.Column(db.String(100))
     pagoTotal = db.Column(db.Float())
-    dia = db.Column(db.Integer)
-    mes = db.Column(db.Integer)
+    dia = db.Column(db.String(10))
+    mes = db.Column(db.String(10))
     anio = db.Column(db.Integer)
     created_at  = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-

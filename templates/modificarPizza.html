@@ -1,109 +1,110 @@
-{% extends "layout3.html" %} {% block content %} {% from "_macros.html" import
-camposNuevos %} {% from "_macros.html" import rds %} {% from "_macros.html"
-import checks %}
+{% extends "layout3.html" %}
+{% block content %}
+{% from "_macros.html" import camposNuevos %}
+{% from "_macros.html" import rds %}
+{% from "_macros.html" import checks %}
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-12 mt-4">
-      <form action="/itemedit" method="POST" name="datos1" novalidate>
-        <input
-          type="text"
-          hidden
-          name="csrf_token"
-          value="{{ csrf_token() }}"
-        />
-        <div class="row mt-4">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-5">
-            <div class="row control-row" hidden>
-              <div
-                class="form-group col-xs-12 floating-label-form-group controls"
-              >
-                {{camposNuevos(form.id, class="form-control")}}
-              </div>
-            </div>
-            <div class="row mb-2">
-              {{ camposNuevos(form.nombre, class="form-control",
-              placeholder="Nombre completo") }}
-            </div>
-            <div class="row mb-2">
-              {{ camposNuevos(form.direccion, class="form-control",
-              placeholder="Direccion") }}
-            </div>
-            <div class="row">
-              <div class="mb-2">
-                <label for="">Chica $40</label>
-                {{ rds("chica") }}
-                <br />
-                <label for="">Mediana $80</label>
-                {{ rds("mediana") }}
-                <br />
-                <label for="">Grande $120</label>
-                {{ rds("grande") }}
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-5">
-            <div class="row mb-2">
-              {{ camposNuevos(form.telefono, class="form-control",
-              placeholder="Telefono") }}
-            </div>
+    <div class="row">
+        <div class="col-sm-12 mt-4">
+            <form action="/itemedit" method="POST" name="datos1" novalidate>
+                <input type="text" hidden name="csrf_token" value="{{ csrf_token() }}" />
+                <div class="row mt-4">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-5">
+                        <div class="row control-row" hidden>
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                {{camposNuevos(form.id, class="form-control")}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            {{ camposNuevos(form.nombre, class="form-control",
+                            placeholder="Nombre completo") }}
+                        </div>
+                        <div class="row mb-2">
+                            {{ camposNuevos(form.direccion, class="form-control",
+                            placeholder="Direccion") }}
+                        </div>
+                        <div class="row">
+                            <div class="mb-2">
+                                <label for="">Chica $40</label>
+                                {{ rds("chica") }}
+                                <br />
+                                <label for="">Mediana $80</label>
+                                {{ rds("mediana") }}
+                                <br />
+                                <label for="">Grande $120</label>
+                                {{ rds("grande") }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="row mb-2">
+                            {{ camposNuevos(form.telefono, class="form-control",
+                            placeholder="Telefono") }}
+                        </div>
 
-            <div class="row mb-2">
-              {{ camposNuevos(form.cantidad, class="form-control",
-              placeholder="Cantidad") }}
-            </div>
-            <div class="row mb-2 align-items-center">
-              <div class="col-4">
-                {% for dia in ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] %}
-                    <option value="{{ dia }}" {% if dia == dia_seleccionado %}selected{% endif %}>{{ dia }}</option>
-                {% endfor %}
-              </div>
-              <div class="col-4">
-                <select name="filtermonth" id="filtermonth" class="form-select">
-                  <option value="" selected disabled>Mes</option>
-                  {% for mes in ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"] %}
-                      <option value="{{ mes }}" {% if mes == mes_seleccionado %}selected{% endif %}>{{ mes }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="col-4">
-                {{ camposNuevos(form.anio, class="form-control",
-                placeholder="Año", maxlength="4", minlength="4",
-                onKeyPress="if(this.value.length==4) return false;") }}
-              </div>
-            </div>
-            <div class="row">
-              <div class="mb-2">
-                <label for="">Jamon $10</label>
-                {{ checks("checkbox", "form-check-input", "jamon", "jamon") }}
-                <br />
-                <label for="">Piña $10</label>
-                {{ checks("checkbox", "form-check-input", "pinia", "pinia") }}
-                <br />
-                <label for="">Champiñon $10</label>
-                {{ checks("checkbox", "form-check-input", "champ", "champ") }}
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-1"></div>
+                        <div class="row mb-2">
+                            {{ camposNuevos(form.cantidad, class="form-control",
+                            placeholder="Cantidad") }}
+                        </div>
+                        <div class="row mb-2 align-items-center">
+                            <div class="col-4">
+                                {% for dia in ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+                                %}
+                                <option value="{{ dia }}" {% if dia==dia_seleccionado %}selected{% endif %}>{{ dia }}
+                                </option>
+                                {% endfor %}
+                            </div>
+                            <div class="col-4">
+                                <select name="filtermonth" id="filtermonth" class="form-select">
+                                    <option value="" selected disabled>Mes</option>
+                                    {% for mes in ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
+                                    "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"] %}
+                                    <option value="{{ mes }}" {% if mes==mes_seleccionado %}selected{% endif %}>{{ mes
+                                        }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                {{ camposNuevos(form.anio, class="form-control",
+                                placeholder="Año", maxlength="4", minlength="4",
+                                onKeyPress="if(this.value.length==4) return false;") }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-2">
+                                <label for="">Jamon $10</label>
+                                {{ checks("checkbox", "form-check-input", "jamon", "jamon") }}
+                                <br />
+                                <label for="">Piña $10</label>
+                                {{ checks("checkbox", "form-check-input", "pinia", "pinia") }}
+                                <br />
+                                <label for="">Champiñon $10</label>
+                                {{ checks("checkbox", "form-check-input", "champ", "champ") }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1"></div>
+                </div>
+                <br /><br />
+                <div class="row mt-4">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
+                        <button type="submit" class="btn btn-success w-100">
+                            Actualizar
+                        </button>
+                        <a href="/pizza" style="text-decoration: none; color: #fff">
+                            <button type="button" class="btn btn-danger w-100">
+                                Cancelar
+                            </button>
+                        </a>
+                    </div>
+                    <div class="col-sm-4"></div>
+                </div>
+            </form>
         </div>
-        <br /><br />
-        <div class="row mt-4">
-          <div class="col-sm-4"></div>
-          <div class="col-sm-4">
-            <button type="submit" class="btn btn-success w-100">
-              Actualizar
-            </button>
-            <button type="button" class="btn btn-danger w-100">
-              <a href="/pizza" style="text-decoration: none; color: #fff">
-                Cancelar
-              </a>
-            </button>
-          </div>
-          <div class="col-sm-4"></div>
-        </div>
-      </form>
     </div>
-  </div>
 </div>
 {% endblock %}
+
+

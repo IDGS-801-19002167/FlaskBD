@@ -1,17 +1,19 @@
 $(document).ready(function () {
     var table_ventas = document.getElementById('resultadoTabla');
     table_ventas.style.visibility = 'hidden';
+
+    document.getElementById('clearfilter').style.display = "none";
 });
 
 $('#filtrarBtn').click(function () {
-    const filterday = $('#filterday_get').val();
-    const filtermonth = $("#filtermonth_get").val();
-    const filteranio = $('#filteranio_get').val();
     var data = {
-        filterday: filterday,
-        filtermonth: filtermonth,
-        filteranio: filteranio
-    };
+        filterday: $("#filterday_get").val(),
+        filtermonth: $("#filtermonth_get").val(),
+        filteranio: $("#filteranio_get").val(),
+        filtercustomer: $("#filtercustomer").val()
+    }
+
+    document.getElementById('clearfilter').style.display = "block";
 
     $.ajax({
         type: "POST",
@@ -19,7 +21,8 @@ $('#filtrarBtn').click(function () {
         headers: {
             "X-CSRFToken": $("#csrf_token").val(),
         },
-        data: data,
+        contentType: "application/json",
+        data: JSON.stringify(data),
         beforeSend: function () {
             Swal.fire({
                 title: "Consultando información",
@@ -32,13 +35,13 @@ $('#filtrarBtn').click(function () {
             });
         },
         success: function (response) {
-            console.log(response.resultados)
             Swal.close();
+
             $('#resultadoTabla tbody').empty();
             var table_ventas = document.getElementById('resultadoTabla');
             table_ventas.style.visibility = 'visible';
             let suma = 0;
-
+            console.log(response.resultados);
             response.resultados.forEach(function (resultado) {
                 suma += resultado.pagoTotal;
 
@@ -56,11 +59,18 @@ $('#filtrarBtn').click(function () {
                 '<td>$ ' + suma + '.00 MXN</td>' +
                 '</tr>'
             );
+
+            document.getElementById('filterday_get').style.visibility = 'hidden';
+            document.getElementById('filtermonth_get').style.visibility = 'hidden';
+            document.getElementById('filteranio_get').style.visibility = 'hidden';
+            document.getElementById('filtercustomer').style.visibility = 'hidden';
         },
         error: function (error) {
             console.error("Error en la solicitud:", error);
         }
     });
+
+    document.getElementById('filtrarBtn').style.display = 'none';
 });
 
 $("#btnVenta").on("click", function () {
@@ -133,3 +143,172 @@ $("#btnVenta").on("click", function () {
     });
 });
 
+$("#profile-tab").on('shown.bs.tab', function () {
+    $.ajax({
+        headers: {
+            "X-CSRFToken": $("#csrf_token").val(),
+        },
+        contentType: "application/json",
+        type: "GET",
+        url: "/orders",
+        success: function (response) {
+            $('#ordenes tbody').empty();
+            var table_orders = document.getElementById('ordenes');
+            console.log(response);
+
+            if (response.length != 0) {
+                let suma = 0;
+
+                response.forEach(function (resultado) {
+                    suma += resultado.precio;
+
+                    $('#ordenes tbody').append(
+                        '<tr>' +
+                        '<td>' + resultado.tamanio + '</td>' +
+                        '<td>' + resultado.ingredientes + '</td>' +
+                        '<td>' + resultado.cantidad + '</td>' +
+                        '<td>' + resultado.precio + '</td>' +
+                        '<td hidden>' + resultado.id + '</td>' +
+                        '<td hidden>' + resultado.nombre + '</td>' +
+                        '<td hidden>' + resultado.dia + '</td>' +
+                        '<td hidden>' + resultado.mes + '</td>' +
+                        '<td hidden>' + resultado.anio + '</td>' +
+                        '<td class="d-flex align-content-center flex-wrap">' +
+                        '<button type="submit" class="btn btn-danger" id="itemdelete" onclick="itemDelete(' + resultado.id + ')">' +
+                        '<i class="fa-solid fa-trash me-auto mx-0"></i>' +
+                        '</button>&nbsp;' +
+                        '<a style="text-decoration: none; color: #fff" href="itemedit?id=' + resultado.id + '">' +
+                        '<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal_edit">' +
+                        '<i class="fa-solid fa-pen-to-square me-auto mx-0"></i>' +
+                        '</button>' +
+                        '</a>' +
+                        '</td>' +
+                        '</tr>'
+                    );
+                });
+
+                $("#ordenes tfoot").append(
+                    '<tr>' +
+                    '<td colspan="3">Total de la lista</td>' +
+                    '<td colspan="2">$ ' + suma + '.00 MXN</td>' +
+                    '</tr>'
+                );
+            } else {
+                $('#ordenes tbody').append(
+                    '<tr>' +
+                    '<td class="text-center" colspan="5">No hay pizzas agregadas a la lista</td>' +
+                    '</tr>'
+                );
+            }
+
+            table_orders.style.visibility = 'visible';
+        }
+    })
+});
+
+$("#cleanfields").on('click', function () {
+    $("#name_customer").val('');
+    $("#addres_customer").val('');
+    $("#phone_customer").val('');
+    $("#count_pizza").val('');
+    $("#year").val('');
+});
+
+$("#clearfilter").on('click', function () {
+    document.getElementById('clearfilter').style.display = "none";
+    document.getElementById('filtrarBtn').style.display = 'block';
+    var table_ventas = document.getElementById('resultadoTabla');
+    table_ventas.style.visibility = 'hidden';
+    $('#resultadoTabla tbody').empty();
+    $('#resultadoTabla tfoot').empty();
+    $("#filteranio_get").val('');
+    $("#filtermonth_get").val('');
+    $("#filterday_get").val('');
+    $("#filtercustomer").val('');
+    document.getElementById('filterday_get').style.visibility = 'visible';
+    document.getElementById('filtermonth_get').style.visibility = 'visible';
+    document.getElementById('filteranio_get').style.visibility = 'visible';
+    document.getElementById('filtercustomer').style.visibility = 'visible';
+});
+
+function itemDelete(id) {
+    const data = {
+        id: id,
+    }
+
+    $.ajax({
+        url: "/deleteitem",
+        headers: {
+            "X-CSRFToken": $("#csrf_token").val(),
+        },
+        contentType: "application/json",
+        type: "POST",
+        data: JSON.stringify(data),
+        success: function (response) {
+            Swal.fire({
+                title: "Pizza eliminada",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500,
+            }).then(() => {
+                location.reload();
+            });
+        },
+        error: function (error) {
+            Swal.fire("Error al eliminar la pizza", "", "error");
+        }
+    });
+}
+
+function additem() {
+    const ingredientes = {
+        jamon: $("#jamon").is(":checked"),
+        pinia: $("#pinia").is(":checked"),
+        champ: $("#champ").is(":checked")
+    }
+
+    const data = {
+        nombre: $("#name_customer").val(),
+        direccion: $("#addres_customer").val(),
+        telefono: $("#phone_customer").val(),
+        cantidad: $("#count_pizza").val(),
+        tamanio: $("[name='tamanio']:checked").val(),
+        ingredientes: ingredientes,
+        dia: $("#filterday").val(),
+        mes: $("#filtermonth").val(),
+        anio: $("#filteranio").val()
+    }
+
+    $.ajax({
+        url: "/pizza",
+        headers: {
+            "X-CSRFToken": $("#csrf_token").val(),
+        },
+        contentType: "application/json",
+        type: "POST",
+        data: JSON.stringify(data),
+        success: function (response) {
+            console.log(response.message);
+            Swal.fire({
+                title: "Pizza agregada",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500,
+            }).then(() => {
+                $("#jamon").prop("checked", false);
+                $("#pinia").prop("checked", false);
+                $("#champ").prop("checked", false);
+                $("[name='tamanio']").prop("checked", false);
+                $("#filterday").val('');
+                $("#filtermonth").val('');
+                $("#filteranio").val('');
+                $("#count_pizza").val('');
+
+                Swal.close();
+            });
+        },
+        error: function (error) {
+            Swal.fire("Error al agregar la pizza", "", "error");
+        }
+    });
+}

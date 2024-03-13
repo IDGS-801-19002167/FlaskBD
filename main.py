@@ -130,25 +130,79 @@ def modificar():
 
 @app.route("/pizza", methods=["GET", "POST"])
 def pizzas():
-    form_p = forms2.Pizza(request.form)
-    form_d = forms2.PizzaE(request.form)
-    ingredientes = []
-    orden = Pizza.query.all()   
-    ventas = Ventas.query.all()
+    # form_p = forms2.Pizza(request.form)
+    # form_d = forms2.PizzaE(request.form)
+    # ingredientes = []
+    # ventas = Ventas.query.all()
 
-    if  request.method == "POST":
-        precio = form_p.precio.data
-        tamanio = form_p.tamanio.data
-        cantidad = form_p.cantidad.data
-        jamon = request.form.get('jamon')
-        pinia =  request.form.get('pinia')
-        champ = request.form.get('champ')
+    # if request.method == "POST":
+    #     precio = form_p.precio.data
+    #     tamanio = form_p.tamanio.data
+    #     cantidad = form_p.cantidad.data
+    #     jamon = request.form.get('jamon')
+    #     pinia = request.form.get('pinia')
+    #     champ = request.form.get('champ')
 
-        if jamon is not None:
+    #     if jamon is not None:
+    #         ingredientes.append('Jamón')
+    #     if pinia is not None:
+    #         ingredientes.append('Piña')
+    #     if champ is not None:
+    #         ingredientes.append('Champiñones')
+
+    #     size = 0
+
+    #     if len(ingredientes) == 1:
+    #         size = 10
+    #     elif len(ingredientes) == 2:
+    #         size = 20
+    #     elif len(ingredientes) == 3:
+    #         size = 30
+    #     else:
+    #         size = 0
+
+    #     if tamanio == 'chica':
+    #         precio = (40 * int(cantidad)) + size
+    #     elif tamanio == 'mediana':
+    #         precio = (80 * int(cantidad)) + size
+    #     elif tamanio == 'grande':
+    #         precio = (120 * int(cantidad)) + size
+
+    #     pizzaDB = Pizza(
+    #         nombre=form_p.nombre.data,
+    #         direccion=form_p.direccion.data,
+    #         telefono=form_p.telefono.data,
+    #         cantidad=form_p.cantidad.data,
+    #         tamanio=form_p.tamanio.data,
+    #         precio=precio,
+    #         ingredientes=size,
+    #         dia=request.form.get('filterday'),
+    #         mes=request.form.get('filtermonth'),
+    #         anio=form_p.anio.data
+    #     )
+
+    #     # db.session.add(pizzaDB)
+    #     # db.session.commit()
+    #     # return jsonify({'message': "Pizza agregada con exito"})
+
+    # return redirect("/pizzeria")
+    datos_json = request.get_json()
+    
+    if request.method == "POST":
+        precio = 0
+        tamanio = datos_json['tamanio']
+        cantidad = datos_json['cantidad']
+        jamon = datos_json['ingredientes']['jamon']
+        pinia = datos_json['ingredientes']['pinia']
+        champ = datos_json['ingredientes']['champ']
+
+        ingredientes = []
+
+        if jamon is not False:
             ingredientes.append('Jamón')
-        if pinia is not None:
+        if pinia is not False:
             ingredientes.append('Piña')
-        if champ is not None:
+        if champ is not False:
             ingredientes.append('Champiñones')
 
         size = 0
@@ -162,40 +216,58 @@ def pizzas():
         else:
             size = 0
 
-        if  tamanio == 'chica':
+        if tamanio == 'chica':
             precio = (40 * int(cantidad)) + size
         elif tamanio == 'mediana':
             precio = (80 * int(cantidad)) + size
-        elif tamanio == 'grande' :
+        elif tamanio == 'grande':
             precio = (120 * int(cantidad)) + size
 
-
         pizzaDB = Pizza(
-            nombre = form_p.nombre.data,
-            direccion = form_p.direccion.data,
-            telefono = form_p.telefono.data,
-            cantidad = form_p.cantidad.data,
-            tamanio = form_p.tamanio.data,
-            precio = precio,
-            ingredientes = size,
-            dia = request.form.get('filterday'),
-            mes = request.form.get('filtermonth'),
-            anio = form_p.anio.data
+            nombre=datos_json['nombre'],
+            direccion=datos_json['direccion'],
+            telefono=datos_json['telefono'],
+            cantidad=datos_json['cantidad'],
+            tamanio=datos_json['tamanio'],
+            precio=precio,
+            ingredientes=size,
+            dia=datos_json['dia'],
+            mes=datos_json['mes'],
+            anio=datos_json['anio']
         )
 
         db.session.add(pizzaDB)
         db.session.commit()
+        return jsonify({'message': "Pizza agregada con exito"})
 
-    return render_template("pizza.html", form=form_p, orden = orden, ventas = ventas)
+
+@app.route("/pizzeria", methods=["GET"])
+def pizzeria():
+    form_p = forms2.Pizza(request.form)
+    ventas = Ventas.query.all()
+
+    return render_template("pizza.html", form=form_p, ventas=ventas)
+
+
+@app.route("/orders", methods=["GET"])
+def getorders():
+    orden = Pizza.query.all()
+    all_orders = [{'tamanio': o.tamanio, 'ingredientes': o.ingredientes, 'cantidad': o.cantidad, 'precio': o.precio,
+                   'id': o.id, 'nombre': o.nombre, 'dia': o.dia, 'mes': o.mes, 'anio': o.anio} for o in orden]
+
+    return jsonify(all_orders)
+
 
 @app.route("/itemedit", methods=["GET", "POST"])
 def edit():
     form_e = forms2.PizzaE(request.form)
     ingredientes = []
+    dia_seleccionado = None
+    mes_seleccionado = None
 
     if request.method == "GET":
         id = request.args.get('id')
-        item = db.session.query(Pizza).filter(Pizza.id==id).first()
+        item = db.session.query(Pizza).filter(Pizza.id == id).first()
         form_e.id.data = request.args.get('id')
         form_e.nombre.data = item.nombre
         form_e.direccion.data = item.direccion
@@ -215,7 +287,7 @@ def edit():
         tamanio = form_e.tamanio.data
         cantidad = form_e.cantidad.data
         jamon = request.form.get('jamon')
-        pinia =  request.form.get('pinia')
+        pinia = request.form.get('pinia')
         champ = request.form.get('champ')
 
         if jamon is not None:
@@ -236,15 +308,15 @@ def edit():
         else:
             size = 0
 
-        if  tamanio == 'chica':
+        if tamanio == 'chica':
             precio = (40 * int(cantidad)) + size
         elif tamanio == 'mediana':
             precio = (80 * int(cantidad)) + size
-        elif tamanio == 'grande' :
+        elif tamanio == 'grande':
             precio = (120 * int(cantidad)) + size
-        
+
         item.nombre = form_e.id.data
-        item.direccion =  form_e.direccion.data
+        item.direccion = form_e.direccion.data
         item.telefono = form_e.telefono.data
         item.cantidad = form_e.cantidad.data
         item.precio = precio
@@ -255,97 +327,67 @@ def edit():
         db.session.commit()
 
         return redirect('/pizza')
-    
-    return render_template('modificarPizza.html', form=form_e)
+
+    return render_template('modificarPizza.html', form=form_e, dia=dia_seleccionado, mes=mes_seleccionado)
+
 
 @app.route("/deleteitem", methods=["GET", "POST"])
 def delitem():
-    form_d = forms2.PizzaE(request.form)
+    item_d = request.get_json()
 
     if request.method == "POST":
-        id = form_d.id.data
+        id = item_d['id']
         item = Pizza.query.get(id)
 
         if item:
             db.session.delete(item)
             db.session.commit()
-            return redirect("/pizza")
-        else:
-            flash("No se encontró el elemento con el ID proporcionado", "error")
-    
-    return render_template("pizza.html", form=form_d)
 
-@app.route('/filtrar', methods=['POST'])
+    return redirect("/pizzeria")
+
+
+@app.route('/filtrar', methods=["GET", "POST"])
 def filtrar():
-    filterday = request.args.get('filterday')
-    filtermonth = request.args.get('filtermonth')
-    filteranio = request.args.get('filteranio')
-    dias = [
-        "Lunes",
-        "Martes",
-        "Miercoles",
-        "Jueves",
-        "Viernes",
-        "Sabado",
-        "Domingo"
-    ]
-    
-    meses = [
-        "Enero",
-        "Febrero",
-        "Marzo",
-        "Abril",
-        "Mayo",
-        "Junio",
-        "Julio",
-        "Agosto",
-        "Septiembre",
-        "Octubre",
-        "Noviembre",
-        "Diciembre"
-    ]
-
+    datos = request.get_json()
     resultados = []
-
-    # if filtro == 'dia':
-    #     resultados = Ventas.query.filter_by(dia=int(valor)).all()
-    # elif filtro == 'mes':
-    #     resultados = Ventas.query.filter_by(mes=int(valor)).all()
-    # elif filtro == 'anio':
-    #     resultados = Ventas.query.filter_by(anio=int(valor)).all()
-    # elif filtro == 'nombre':
-    #     resultados = Ventas.query.filter_by(nombreC=valor).all()
     
-    # if filterday is not None and filtermonth is None and filteranio == "":
-    #     resultados = Ventas.query.filter_by(dia=str(filterday)).all()
-    # elif filtermonth is not None and filteranio == "" and filterday is None:
-    #     resultados = Ventas.query.filter_by(mes=str(filtermonth)).all()
-    # elif filteranio != "" and filterday is None and filtermonth is None:
-    #     resultados = Ventas.query.filter_by(anio=str(filteranio)).all()
-    
-    if dias[filterday]:
-        resultados = Ventas.query.filter_by(dia=str(filterday)).all()
-    elif meses[filtermonth]:
-        resultados = Ventas.query.filter_by(mes=str(filtermonth)).all()
-    elif filteranio != "":
-        resultados = Ventas.query.filter_by(anio=str(filteranio)).all()
+    try:
+        if request.method == "POST":
+            filterday = datos['filterday']
+            filtermonth = datos['filtermonth']
+            filteranio = datos['filteranio']
+            filtercustomer = datos['filtercustomer']
 
-    resultados_json = [{'nombreC': r.nombreC, 'pagoTotal':r.pagoTotal} for r in resultados]
+            if filterday is not None and filtermonth is None and filteranio == "":
+                resultados = db.session.query(Ventas).filter(Ventas.dia == filterday).all()
+            elif filtermonth is not None and filterday is None and filteranio == "":
+                resultados = db.session.query(Ventas).filter(Ventas.mes == filtermonth).all()
+            elif filteranio != "" and filterday is None and filtermonth is None:
+                resultados = db.session.query(Ventas).filter(Ventas.anio == filteranio).all()
+            elif filtercustomer != "" and filterday is None and filtermonth is None and filteranio == "":
+                resultados = db.session.query(Ventas).filter(Ventas.nombreC == filtercustomer).all()
+
+        resultados_json = [{'nombreC': r.nombreC,
+                            'pagoTotal': r.pagoTotal} for r in resultados]
+
+    except Exception as ex:
+        return jsonify({"error": "Solo 1"})
 
     return jsonify({'resultados': resultados_json})
 
-@app.route('/venta', methods=['GET', 'POST'])
+
+@app.route('/venta', methods=['POST'])
 def venta():
     data = request.get_json()
-    
-    for item in data:
-        try:
+
+    try:
+        for item in data:
             venta = Ventas(
-                nombreC = item.get('nombre'), 
-                pagoTotal = item.get('subtotal'),
-                dia = item.get('dia'),
-                mes = item.get('mes'),
-                anio = item.get('anio')
+                nombreC=item.get('nombre'),
+                pagoTotal=item.get('subtotal'),
+                dia=item.get('dia'),
+                mes=item.get('mes'),
+                anio=item.get('anio')
             )
 
             db.session.add(venta)
@@ -357,17 +399,19 @@ def venta():
             if p:
                 db.session.delete(p)
 
-            db.session.commit()
+        db.session.commit()
 
-            return jsonify({'message' : "Venta realizada con exito"})
-        except Exception as e:
-            print(e)
-            return jsonify({"error": "Ocurrio un error"})
+        return jsonify({'message': "Venta realizada con éxito"})
+    except Exception as e:
+        print(e)
+        return jsonify({"error": "Ocurrió un error"})
 
     return redirect('/pizza')
 
+
 def realizar_filtrado(filtro, valor):
     return {'resultados': ['Resultado 1', 'Resultado 2']}
+
 
 
 if __name__ == "__main__":

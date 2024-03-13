@@ -4,315 +4,351 @@
 {% from "_macros.html" import rds %}
 {% from "_macros.html" import checks %}
 <div class="container-fluid">
-  <input type="text" hidden name="csrf_token" id="csrf_token"
-    value="{{ csrf_token() }}" />
-  <ul class="nav nav-pills mt-4 nav-justified" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
-        data-bs-target="#home-tab-pane"
-        type="button" role="tab" aria-controls="home-tab-pane"
-        aria-selected="true">
-        <i class="fa-solid fa-list-ul"></i>&nbsp;Lista de Ordenes
-      </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
-        data-bs-target="#profile-tab-pane"
-        type="button" role="tab" aria-controls="profile-tab-pane"
-        aria-selected="false">
-        <i class="fa-solid fa-file-invoice-dollar"></i>&nbsp;Lista de Ventas
-      </button>
-    </li>
-  </ul>
-  <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel"
-      aria-labelledby="home-tab"
-      tabindex="0">
-      <div class="row">
-        <div class="col-sm-12 mt-4">
-          <form action="/pizza" method="POST" name="datos1" novalidate>
-            <input type="text" hidden name="csrf_token"
-              value="{{ csrf_token() }}" />
-            <div class="row mt-4">
-              <div class="col-sm-1"></div>
-              <div class="col-sm-5">
-                <div class="card border-0">
-                  <div class="card-body">
-                    <div class="row mb-2">
-                      {{ camposNuevos(form.nombre, class="form-control",
-                      placeholder="Nombre completo", id="name_customer") }}
-                    </div>
-                    <div class="row mb-2">
-                      {{ camposNuevos(form.direccion, class="form-control",
-                      placeholder="Direccion", id="addres_customer") }}
-                    </div>
-                    <div class="row">
-                      <div class="mb-2">
-                        <label for>Chica $40</label>
-                        {{ rds("chica") }}
-                        <br />
-                        <label for>Mediana $80</label>
-                        {{ rds("mediana") }}
-                        <br />
-                        <label for>Grande $120</label>
-                        {{ rds("grande") }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-5">
-                <div class="card border-0">
-                  <div class="card-body">
-                    <div class="row mb-2">
-                      {{ camposNuevos(form.telefono, class="form-control",
-                      placeholder="Telefono", id="phone_customer") }}
-                    </div>
-
-                    <div class="row mb-2">
-                      {{ camposNuevos(form.cantidad, class="form-control",
-                      placeholder="Cantidad", id="count_pizza") }}
-                    </div>
-
-                    <div class="row mb-2 align-items-center">
-                      <div class="col-4">
-                        <!-- {{ camposNuevos(form.dia, class="form-control",
-                        placeholder="Dia", maxlength="2", minlength="2",
-                        onKeyPress="if(this.value.length==2) return false;",
-                        id="day") }} -->
-                        <select name="filterday" id="filterday"
-                          class="form-select">
-                          <option value selected disabled>Dia</option>
-                          <option value="Lunes">Lunes</option>
-                          <option value="Martes">Martes</option>
-                          <option value="Miercoles">Miercoles</option>
-                          <option value="Jueves">Jueves</option>
-                          <option value="Viernes">Viernes</option>
-                          <option value="Sabado">Sabado</option>
-                          <option value="Domingo">Domingo</option>
-                        </select>
-                      </div>
-                      <div class="col-4">
-                        <select name="filtermonth" id="filtermonth"
-                          class="form-select">
-                          <option value selected disabled>Mes</option>
-                          <option value="Enero">Enero</option>
-                          <option value="Febrero">Febrero</option>
-                          <option value="Marzo">Marzo</option>
-                          <option value="Abril">Abril</option>
-                          <option value="Mayo">Mayo</option>
-                          <option value="Junio">Junio</option>
-                          <option value="Julio">Julio</option>
-                          <option value="Agosto">Agosto</option>
-                          <option value="Septiembre">Septiembre</option>
-                          <option value="Octubre">Octubre</option>
-                          <option value="Noviembre">Noviembre</option>
-                          <option value="Diciembre">Diciembre</option>
-                        </select>
-                      </div>
-                      <div class="col-4">
-                        {{ camposNuevos(form.anio, class="form-control",
-                        placeholder="Año", maxlength="4", minlength="4",
-                        onKeyPress="if(this.value.length==4) return false;",
-                        id="year") }}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="mb-2">
-                        <div class="form-check form-check-inline">
-                          <label for>Jamon $10</label>
-                          {{ checks("checkbox", "form-check-input", "jamon",
-                          "jamon")
-                          }}
-                        </div>
-                        <div class="form-check form-check-inline">
-                          <label for>Piña $10</label>
-                          {{ checks("checkbox", "form-check-input", "pinia",
-                          "pinia")
-                          }}
-                        </div>
-                        <div class="form-check form-check-inline">
-                          <label for>Champiñon $10</label>
-                          {{ checks("checkbox", "form-check-input", "champ",
-                          "champ")
-                          }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-1"></div>
-            </div>
-            <br />
-            <div class="row mt-2">
-              <div class="col-sm-4"></div>
-              <div class="col-sm-4">
-                <button type="submit" class="btn btn-success w-100"
-                  id="btnOrders">
-                  <i class="fa-solid fa-cart-shopping"></i>&nbsp;Agregar a
-                  la
-                  lista
-                </button>
-              </div>
-              <div class="col-sm-4"></div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel"
-      aria-labelledby="profile-tab" tabindex="0">
-      <div class="row mt-4">
-        <div class="col-sm-6">
-          <div class="card border-0">
-            <div class="card-body">
-              <h3 class="text-center">Lista de ordenes</h3>
-              <br />
-              <table class="table table-striped table-hover" id="ordenes">
-                <thead class="text-center">
-                  <tr>
-                    <th>Tamaño</th>
-                    <th>Ingredientes</th>
-                    <th>Cantidad</th>
-                    <th>Subtotal</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% if orden|length > 0 %}
-                  {% for item in orden %}
-                  <tr>
-                    <td>{{ item.tamanio }}</td>
-                    <td>{{ item.ingredientes }}</td>
-                    <td>{{ item.cantidad }}</td>
-                    <td>{{ item.precio }}</td>
-                    <td hidden>{{ item.id }}</td>
-                    <td hidden>{{ item.nombre }}</td>
-                    <td hidden>{{ item.dia }}</td>
-                    <td hidden>{{ item.mes }}</td>
-                    <td hidden>{{ item.anio }}</td>
-                    <td class="d-flex align-content-center flex-wrap">
-                      <form action="/deleteitem" method="POST" novalidate>
+    <input type="text" hidden name="csrf_token" id="csrf_token"
+        value="{{ csrf_token() }}" />
+    <ul class="nav nav-pills mt-4 nav-justified" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                data-bs-target="#home-tab-pane"
+                type="button" role="tab" aria-controls="home-tab-pane"
+                aria-selected="true">
+                <i class="fa-solid fa-list-ul"></i>&nbsp;Lista de Ordenes
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
+                data-bs-target="#profile-tab-pane"
+                type="button" role="tab" aria-controls="profile-tab-pane"
+                aria-selected="false">
+                <i class="fa-solid fa-file-invoice-dollar"></i>&nbsp;Lista de
+                Ventas
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home-tab-pane"
+            role="tabpanel" aria-labelledby="home-tab"
+            tabindex="0">
+            <div class="row">
+                <div class="col-sm-12 mt-4">
+                    <form action method="POST" name="datos1" novalidate>
                         <input type="text" hidden name="csrf_token"
-                          value="{{ csrf_token() }}" />
-                        <input type="text" hidden name="id"
-                          value="{{ item.id }}" />
-                        <button type="submit" class="btn btn-danger">
-                          <i class="fa-solid fa-trash me-auto mx-0"></i>
-                        </button>
-                      </form>
-                      &nbsp;
-                      <button type="button" class="btn btn-info"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal_edit">
-                        <a style="text-decoration: none; color: #fff"
-                          href="itemedit?id={{item.id}}">
-                          <i
-                            class="fa-solid fa-pen-to-square me-auto mx-0"></i>
-                        </a>
-                      </button>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                  {% else %}
-                  <tr>
-                    <td class="text-center" colspan="5">No hay pizzas
-                      agregadas
-                      a la lista</td>
-                  </tr>
-                  {% endif %}
-                </tbody>
-              </table>
-              <br />
-              <button type="submit" class="btn btn-success mt-4"
-                id="btnVenta">
-                Generar venta
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="card border-0">
-            <div class="card-body">
-              <div class="row">
-                <h3 class="text-center">Ventas generales</h3>
-                <br><br>
-                <div class="row mb-2">
-                  <div class="col-sm-3">
-                    <!-- <select id="filtroSelect" class="form-control">
-                      <option value selected disabled>Seleccionar</option>
-                      <option value="dia">Día</option>
-                      <option value="mes">Mes</option>
-                      <option value="anio">Año</option>
-                      <option value="nombre">Cliente</option>
-                    </select> -->
-                    <select name="filterday_get" id="filterday_get"
-                      class="form-select">
-                      <option value selected disabled>Dia</option>
-                      <option value="Lunes">Lunes</option>
-                      <option value="Martes">Martes</option>
-                      <option value="Miercoles">Miercoles</option>
-                      <option value="Jueves">Jueves</option>
-                      <option value="Viernes">Viernes</option>
-                      <option value="Sabado">Sabado</option>
-                      <option value="Domingo">Domingo</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-3">
-                    <select name="filtermonth_get" id="filtermonth_get"
-                      class="form-select">
-                      <option value selected disabled>Mes</option>
-                      <option value="Enero">Enero</option>
-                      <option value="Febrero">Febrero</option>
-                      <option value="Marzo">Marzo</option>
-                      <option value="Abril">Abril</option>
-                      <option value="Mayo">Mayo</option>
-                      <option value="Junio">Junio</option>
-                      <option value="Julio">Julio</option>
-                      <option value="Agosto">Agosto</option>
-                      <option value="Septiembre">Septiembre</option>
-                      <option value="Octubre">Octubre</option>
-                      <option value="Noviembre">Noviembre</option>
-                      <option value="Diciembre">Diciembre</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-3">
-                    <input type="text" id="filteranio_get"
-                      class="form-control"
-                      placeholder="Año">
-                  </div>
-                  <div class="col-sm-4">
-                    <button id="filtrarBtn" type="button"
-                      class="btn btn-info">
-                      Filtrar
-                    </button>
-                  </div>
-                </div>
-                <br><br>
-                <div class="col-sm-12 table-responsive">
-                  <table id="resultadoTabla"
-                    class="table table-striped table-hover">
-                    <thead>
-                      <tr>
-                        <th>Cliente</th>
-                        <th>Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+                            value="{{ csrf_token() }}" />
+                        <div class="row mt-4">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-5">
+                                <div class="card border-0">
+                                    <div class="card-body">
+                                        <div class="row mb-2">
+                                            {{ camposNuevos(form.nombre,
+                                            class="form-control",
+                                            placeholder="Nombre completo",
+                                            id="name_customer") }}
+                                        </div>
+                                        <div class="row mb-2">
+                                            {{ camposNuevos(form.direccion,
+                                            class="form-control",
+                                            placeholder="Direccion",
+                                            id="addres_customer") }}
+                                        </div>
+                                        <div class="row">
+                                            <div class="mb-2">
+                                                <label for>Chica $40</label>
+                                                {{ rds("chica") }}
+                                                <br />
+                                                <label for>Mediana $80</label>
+                                                {{ rds("mediana") }}
+                                                <br />
+                                                <label for>Grande $120</label>
+                                                {{ rds("grande") }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="card border-0">
+                                    <div class="card-body">
+                                        <div class="row mb-2">
+                                            {{ camposNuevos(form.telefono,
+                                            class="form-control",
+                                            placeholder="Telefono",
+                                            id="phone_customer", type="number",
+                                            onKeyPress="if(this.value.length==10) return false;")
+                                            }}
+                                        </div>
 
-                    </tbody>
-                    <tfoot>
+                                        <div class="row mb-2">
+                                            {{ camposNuevos(form.cantidad,
+                                            class="form-control",
+                                            placeholder="Cantidad",
+                                            id="count_pizza") }}
+                                        </div>
 
-                    </tfoot>
-                  </table>
+                                        <div
+                                            class="row mb-2 align-items-center">
+                                            <div class="col-4">
+                                                <select name="filterday"
+                                                    id="filterday"
+                                                    class="form-select">
+                                                    <option value selected
+                                                        disabled>Dia</option>
+                                                    <option
+                                                        value="Lunes">Lunes</option>
+                                                    <option
+                                                        value="Martes">Martes</option>
+                                                    <option
+                                                        value="Miercoles">Miercoles</option>
+                                                    <option
+                                                        value="Jueves">Jueves</option>
+                                                    <option
+                                                        value="Viernes">Viernes</option>
+                                                    <option
+                                                        value="Sabado">Sabado</option>
+                                                    <option
+                                                        value="Domingo">Domingo</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-4">
+                                                <select name="filtermonth"
+                                                    id="filtermonth"
+                                                    class="form-select">
+                                                    <option value selected
+                                                        disabled>Mes</option>
+                                                    <option
+                                                        value="Enero">Enero</option>
+                                                    <option
+                                                        value="Febrero">Febrero</option>
+                                                    <option
+                                                        value="Marzo">Marzo</option>
+                                                    <option
+                                                        value="Abril">Abril</option>
+                                                    <option
+                                                        value="Mayo">Mayo</option>
+                                                    <option
+                                                        value="Junio">Junio</option>
+                                                    <option
+                                                        value="Julio">Julio</option>
+                                                    <option
+                                                        value="Agosto">Agosto</option>
+                                                    <option
+                                                        value="Septiembre">Septiembre</option>
+                                                    <option
+                                                        value="Octubre">Octubre</option>
+                                                    <option
+                                                        value="Noviembre">Noviembre</option>
+                                                    <option
+                                                        value="Diciembre">Diciembre</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-4">
+                                                {{ camposNuevos(form.anio,
+                                                class="form-control mt-2",
+                                                placeholder="Año",
+                                                maxlength="4", minlength="4",
+                                                onKeyPress="if(this.value.length==4) return false;",
+                                                id="filteranio") }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="mb-2">
+                                                <div
+                                                    class="form-check form-check-inline">
+                                                    <label for>Jamon $10</label>
+                                                    {{ checks("checkbox",
+                                                    "form-check-input", "jamon",
+                                                    "jamon", "jamon")
+                                                    }}
+                                                </div>
+                                                <div
+                                                    class="form-check form-check-inline">
+                                                    <label for>Piña $10</label>
+                                                    {{ checks("checkbox",
+                                                    "form-check-input", "pinia",
+                                                    "pinia", "pinia")
+                                                    }}
+                                                </div>
+                                                <div
+                                                    class="form-check form-check-inline">
+                                                    <label for>Champiñon
+                                                        $10</label>
+                                                    {{ checks("checkbox",
+                                                    "form-check-input", "champ",
+                                                    "champ", "champ")
+                                                    }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1"></div>
+                        </div>
+                        <br />
+                        <div class="row mt-2">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-3">
+                                <button type="button" onclick="additem()"
+                                    class="btn btn-success w-100"
+                                    id="btnOrders">
+                                    <i
+                                        class="fa-solid fa-cart-shopping"></i>&nbsp;Agregar
+                                    a
+                                    la
+                                    lista
+                                </button>
+                            </div>
+                            <div class="col-sm-3">
+                                <button type="button"
+                                    class="btn btn-warning w-100"
+                                    id="cleanfields">
+                                    <i
+                                        class="fa-solid fa-arrow-rotate-left"></i>&nbsp;
+                                    Limpiar campos
+                                </button>
+                            </div>
+                            <div class="col-sm-3"></div>
+                        </div>
+                    </form>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
+        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel"
+            aria-labelledby="profile-tab" tabindex="0">
+            <div class="row mt-4">
+                <div class="col-sm-6">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <h3 class="text-center">Lista de ordenes</h3>
+                            <br />
+                            <table class="table table-striped table-hover"
+                                id="ordenes">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th>Tamaño</th>
+                                        <th>Ingredientes</th>
+                                        <th>Cantidad</th>
+                                        <th>Subtotal</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                                <tfoot>
+
+                                </tfoot>
+                            </table>
+                            <button type="submit" class="btn btn-success mt-2"
+                                id="btnVenta">
+                                Generar venta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <h3 class="text-center">Ventas generales</h3>
+                                <br><br>
+                                <div class="row mb-2">
+                                    <div class="col-sm-3">
+                                        <select name="filterday_get"
+                                            id="filterday_get"
+                                            class="form-select">
+                                            <option value selected
+                                                disabled>Dia</option>
+                                            <option value="Lunes">Lunes</option>
+                                            <option
+                                                value="Martes">Martes</option>
+                                            <option
+                                                value="Miercoles">Miercoles</option>
+                                            <option
+                                                value="Jueves">Jueves</option>
+                                            <option
+                                                value="Viernes">Viernes</option>
+                                            <option
+                                                value="Sabado">Sabado</option>
+                                            <option
+                                                value="Domingo">Domingo</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <select name="filtermonth_get"
+                                            id="filtermonth_get"
+                                            class="form-select">
+                                            <option value selected
+                                                disabled>Mes</option>
+                                            <option value="Enero">Enero</option>
+                                            <option
+                                                value="Febrero">Febrero</option>
+                                            <option value="Marzo">Marzo</option>
+                                            <option value="Abril">Abril</option>
+                                            <option value="Mayo">Mayo</option>
+                                            <option value="Junio">Junio</option>
+                                            <option value="Julio">Julio</option>
+                                            <option
+                                                value="Agosto">Agosto</option>
+                                            <option
+                                                value="Septiembre">Septiembre</option>
+                                            <option
+                                                value="Octubre">Octubre</option>
+                                            <option
+                                                value="Noviembre">Noviembre</option>
+                                            <option
+                                                value="Diciembre">Diciembre</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="filteranio_get"
+                                            class="form-control"
+                                            placeholder="Año">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="filtercustomer"
+                                            class="form-control"
+                                            placeholder="Cliente">
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-sm-6">
+                                        <button id="filtrarBtn" type="button"
+                                            class="btn btn-info w-100">
+                                            Filtrar
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <button id="clearfilter" type="button"
+                                            class="btn btn-warning w-100">
+                                            Limpiar filtro
+                                        </button>
+                                    </div>
+                                </div>
+                                <br><br>
+                                <div class="col-sm-12 table-responsive">
+                                    <table id="resultadoTabla"
+                                        class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Cliente</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                        <tfoot>
+
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 {% endblock %}

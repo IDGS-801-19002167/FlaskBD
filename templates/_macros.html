@@ -12,8 +12,8 @@
 <input type="radio" name="tamanio" id="" value="{{ value }}" class="form-check-input">
 {% endmacro %}
 
-{% macro checks (type = "", class = "", name="", value ="") %}
-<input type="{{ type }}" class="{{ class }}" name="{{ name }}" value="{{ value }}"/>
+{% macro checks (type = "", class = "", name="", value ="", id="") %}
+<input type="{{ type }}" class="{{ class }}" name="{{ name }}" value="{{ value }}" id="{{ id }}"/>
 {% endmacro %}
 
 {% macro camposNuevos (field) %}

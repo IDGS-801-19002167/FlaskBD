@@ -144,6 +144,8 @@ $("#btnVenta").on("click", function () {
 });
 
 $("#profile-tab").on('shown.bs.tab', function () {
+    $("#ordenes tfoot").empty();
+    
     $.ajax({
         headers: {
             "X-CSRFToken": $("#csrf_token").val(),
@@ -274,9 +276,8 @@ function additem() {
         cantidad: $("#count_pizza").val(),
         tamanio: $("[name='tamanio']:checked").val(),
         ingredientes: ingredientes,
-        dia: $("#filterday").val(),
-        mes: $("#filtermonth").val(),
-        anio: $("#filteranio").val()
+        fecha: $("#fecha").val(),
+        anio: $("#fecha").val().split('-')[0],
     }
 
     $.ajax({

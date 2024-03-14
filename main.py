@@ -4,6 +4,7 @@ from config import DevelopmentConfig
 from models import db, Alumnos, Pizza, Ventas
 from forms import UserForm, UserForm2
 import forms, forms2
+from datetime import datetime, date
 
 # from localStorage import localStoragePy
 
@@ -195,6 +196,11 @@ def pizzas():
         jamon = datos_json['ingredientes']['jamon']
         pinia = datos_json['ingredientes']['pinia']
         champ = datos_json['ingredientes']['champ']
+        fecha_str = datos_json['fecha']
+        fecha = datetime.strptime(fecha_str, '%Y-%m-%d')
+        dia = fecha.strftime('%A')
+        mes = fecha.strftime('%B')
+        anio = datos_json['anio']
 
         ingredientes = []
 
@@ -217,11 +223,11 @@ def pizzas():
             size = 0
 
         if tamanio == 'chica':
-            precio = (40 * int(cantidad)) + size
+            precio = (40 * int(cantidad)) + size * int(cantidad)
         elif tamanio == 'mediana':
-            precio = (80 * int(cantidad)) + size
+            precio = (80 * int(cantidad)) + size * int(cantidad)
         elif tamanio == 'grande':
-            precio = (120 * int(cantidad)) + size
+            precio = (120 * int(cantidad)) + size * int(cantidad)
 
         pizzaDB = Pizza(
             nombre=datos_json['nombre'],
@@ -231,9 +237,9 @@ def pizzas():
             tamanio=datos_json['tamanio'],
             precio=precio,
             ingredientes=size,
-            dia=datos_json['dia'],
-            mes=datos_json['mes'],
-            anio=datos_json['anio']
+            dia=dia,
+            mes=mes,
+            anio=anio
         )
 
         db.session.add(pizzaDB)
@@ -309,11 +315,11 @@ def edit():
             size = 0
 
         if tamanio == 'chica':
-            precio = (40 * int(cantidad)) + size
+            precio = (40 * int(cantidad)) + (size * cantidad)
         elif tamanio == 'mediana':
-            precio = (80 * int(cantidad)) + size
+            precio = (80 * int(cantidad)) + (size * cantidad)
         elif tamanio == 'grande':
-            precio = (120 * int(cantidad)) + size
+            precio = (120 * int(cantidad)) + (size * cantidad)
 
         item.nombre = form_e.id.data
         item.direccion = form_e.direccion.data
